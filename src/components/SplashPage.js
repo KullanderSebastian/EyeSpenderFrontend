@@ -36,10 +36,14 @@ function SplashPage({ setToken }) {
                 />
                 <input
                     name="password"
+                    type="password"
                     onChange={e => setPassword(e.target.value)}
                     placeholder="Lösenord"
                 />
-                <button>Logga in</button>
+            <button className="loginBtn">Logga in</button>
+                <hr></hr>
+                <p>Har du inget konto?</p>
+                <button className="createAccountBtn">Skapa konto</button>
             </form>
         </main>
     )
