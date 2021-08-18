@@ -16,15 +16,39 @@ function Register() {
     const [password, setPassword] = useState();
     const [usernameIsEntered, setUsernameBool] = useState(false);
     const [passwordIsEntered, setPasswordBool] = useState(false);
+    const [registerError, setRegisterError] = useState({
+        error: null,
+        status: null
+    });
     let content;
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
 
-        createUser({
+        const res = await createUser({
             "username": username,
             "password": password
         });
+
+        console.log(res.error);
+
+        if (!res.error) {
+            setRegisterError({
+                error: false
+            });
+        } else if (res.error) {
+            if (res.status === 400) {
+                setRegisterError({
+                    error: true,
+                    status: 400
+                });
+            } else if (res.status === 500) {
+                setRegisterError({
+                    error: true,
+                    status: 500
+                });
+            }
+        }
     }
 
     const handleButtons = e => {
@@ -90,6 +114,23 @@ function Register() {
                         <a onClick={back}>Tillbaka</a>
                     </form>
                   </main>
+    } if (registerError.error === false) {
+        content = <main className="registerForm">
+                    <h2>Ditt konto är skapat!</h2>
+                    <p>Du kan nu testa att </p><a href="splash">logga in.</a>
+                  </main>
+    } else if (registerError.error === true) {
+        if (registerError.status === 400) {
+            content = <main className="registerForm">
+                        <h2>Användarnamnet du angav används redan av ett annat konto!</h2>
+                        <p>Vänligen gå <a href="/register">tillbaka</a> och välj ett nytt namn.</p>
+                      </main>
+        } else if (registerError.status === 500) {
+            content = <main className="registerForm">
+                        <h2>Ett fel uppstod!</h2>
+                        <p>Vänligen gå <a href="/register">tillbaka</a> och försök igen.</p>
+                      </main>
+        }
     }
 
     return (

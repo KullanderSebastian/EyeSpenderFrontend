@@ -41,10 +41,12 @@ function SplashPage({ setToken }) {
                     placeholder="Lösenord"
                 />
             <button className="loginBtn">Logga in</button>
-                <hr></hr>
-                <p>Har du inget konto?</p>
-                <button className="createAccountBtn">Skapa konto</button>
             </form>
+            <hr></hr>
+            <p>Har du inget konto?</p>
+            <a href="register">
+                <button className="createAccountBtn">Skapa konto</button>
+            </a>
         </main>
     )
 }
