@@ -116,3 +116,148 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 12px;
     }
 }
+
+.financeSetupView {
+    width: 80%;
+    margin: auto;
+    //text-align: center;
+
+    h2:first-of-type {
+        margin-top: 1em;
+        font-size: 18px;
+    }
+
+    h4:first-of-type {
+        margin-top: 1em;
+    }
+
+    p {
+        font-size: 12px;
+        margin-top: 1em;
+    }
+
+    input {
+        width: 100%;
+        background-color: #F4F4F4;
+        margin-top: 3em;
+    }
+
+    button {
+        margin-top: 1em;
+        background-color: $steelBlue;
+        width: 100%;
+    }
+
+    .expensesInputsWrapper {
+        display: table;
+    }
+
+    .expensesInputCategory, .expensesInputAmount {
+        display: table-cell
+    }
+
+    .expensesInputCategory {
+        width: 40%;
+        padding-right: 0.5em;
+    }
+
+    .expensesInputAmount {
+        width: 60%
+    }
+
+    .testInputs:first-of-type {
+        margin-top: 2em;
+    }
+
+    .testInputs {
+        background-color: #EBEBEB;
+        margin-top: 1em;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-right: 0.5em;
+        border-radius: 5px;
+        overflow: hidden;
+        line-height: 36.5px;
+
+        input {
+            width: 25%;
+            margin-top: 0;
+            background-color: white;
+            margin-left: 0.5em;
+            border: 1px solid black;
+            float: right;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 10px;
+            margin-left: 0.5em;
+            width: 31%;
+            border: 1px solid black;
+            float: right;
+        }
+
+        h3 {
+            margin-left: 0.5em;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        img {
+            margin-left: 2px;
+            width: 19.5px;
+            vertical-align: middle;
+            color: #54577c;
+        }
+    }
+
+    .pig {
+        width: 100px;
+        position: absolute;
+        left: calc(50% - 50px);
+        top: 85%;
+    }
+
+    .coin {
+           position: absolute;
+
+           &.coin1 {
+               width: 40px;
+               left: 43%;
+               top: 77%;
+           }
+
+           &.coin2 {
+               width: 30px;
+               left: 37%;
+               top: 70%;
+           }
+
+           &.coin3 {
+               width: 25px;
+               left: 48%;
+               top: 64%;
+           }
+
+           &.coin4 {
+               width: 20px;
+               left: 56%;
+               top: 72%;
+           }
+
+           &.coin5 {
+               width: 17px;
+               left: 33%;
+               top: 64%;
+           }
+
+           &.coin6 {
+               width: 21px;
+               left: 63%;
+               top: 62%;
+           }
+    }
+
+}

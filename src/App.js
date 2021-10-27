@@ -4,6 +4,7 @@ import "./styles/App.scss";
 import Header from "./components/Header";
 import SplashPage from "./components/SplashPage";
 import Dashboard from "./components/Dashboard";
+import FinancesSetup from "./components/FinancesSetup";
 import Register from "./components/Register";
 import useToken from "./components/useToken";
 
@@ -33,6 +34,9 @@ function App() {
             <Header />
             <BrowserRouter>
                 <Switch>
+                    <Route path="/finances">
+                        <FinancesSetup />
+                    </Route>
                     <Route path="/dashboard">
                         <Dashboard />
                     </Route>

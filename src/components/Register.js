@@ -30,8 +30,6 @@ function Register() {
             "password": password
         });
 
-        console.log(res.error);
-
         if (!res.error) {
             setRegisterError({
                 error: false
@@ -56,10 +54,8 @@ function Register() {
 
         if (usernameIsEntered === false) {
             setUsernameBool(true);
-            console.log("username is changed");
         } else if (passwordIsEntered === false) {
             setPasswordBool(true);
-            console.log("password is changed");
         }
     }
 
