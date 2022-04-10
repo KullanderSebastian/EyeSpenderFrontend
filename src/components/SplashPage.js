@@ -23,6 +23,7 @@ function SplashPage({ setToken }) {
             password
         });
 
+        sessionStorage.setItem("username", username);
         setToken(token.token);
     }
 

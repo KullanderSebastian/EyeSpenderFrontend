@@ -1,13 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "./Input";
 import spargris from "../svg/spargris.svg";
 import mynt from "../svg/Mynt.svg";
 import infoCircle from "../svg/info-circle-solid.svg";
 
+async function getUserId() {
+    return fetch("http://localhost:3001/users/getuserid", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"username": sessionStorage.getItem("username")})
+    })
+    .then(data => data.json())
+}
+
+async function saveFinances(data) {
+    return fetch("http://localhost:3001/finances/savefinances", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(data => data.json())
+}
 
 function FinancesSetup() {
     const [whichState, declareState] = useState("welcome");
     const [salaryAmount, setSalary] = useState();
+    const [userId, setUserId] = useState();
     const [needsInput, setNeedsInputs] = useState({
             needs: [
                 {
@@ -95,6 +117,17 @@ function FinancesSetup() {
                 }
             ]
     });
+
+    useEffect(() => {
+        fetch("http://localhost:3001/users/getuserid", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"username": sessionStorage.getItem("username")})
+        })
+        .then(data => console.log(data.text()))
+    }, []);
 
     let content;
 
@@ -185,10 +218,20 @@ function FinancesSetup() {
         }));
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async e => {
         e.preventDefault();
 
-        alert("saved!");
+        let userId = await getUserId();
+
+        const res = await saveFinances({
+            "userid": userId.data,
+            "salary": salaryAmount,
+            "needs": needsInput.needs,
+            "wants": needsInput.wants,
+            "savings": needsInput.savings
+        });
+
+        console.log(res);
     }
 
     if (whichState === "welcome") {
@@ -209,11 +252,10 @@ function FinancesSetup() {
                         <input
                             name="salary"
                             key={1}
-                            value={salaryAmount ? salaryAmount : "Exempel: 19000"}
+                            value={salaryAmount}
                             onChange={e => setSalary(e.target.value)}
                         />
                         <button onClick={goForward}>Nästa</button>
-                        <p>{salaryAmount}</p>
                     </form>
                     </div>
     } else if (whichState === "expensesNeeds") {
@@ -239,8 +281,6 @@ function FinancesSetup() {
                                     <option value="perweek2">Per 2 Veckor</option>
                                     <option value="permonth">Per Månad</option>
                                 </select>
-                                <p>{obj.amount}</p>
-                                <p>{obj.timeframe}</p>
                             </div>
                         )}
                         <button onClick={goForward}>Nästa</button>
@@ -269,8 +309,6 @@ function FinancesSetup() {
                                     <option value="perweek2">Per 2 Veckor</option>
                                     <option selected value="permonth">Per Månad</option>
                                 </select>
-                                <p>{obj.amount}</p>
-                                <p>{obj.timeframe}</p>
                             </div>
                         )}
                         <button onClick={goForward}>Nästa</button>
@@ -298,11 +336,9 @@ function FinancesSetup() {
                                     <option value="perweek2">Per 2 Veckor</option>
                                     <option selected value="permonth">Per Månad</option>
                                 </select>
-                                <p>{obj.amount}</p>
-                                <p>{obj.timeframe}</p>
                             </div>
                         )}
-                        <button onClick={handleSubmit} >Spara</button>
+                        <button onClick={handleSubmit}>Spara</button>
                     </form>
                 </div>
     }
