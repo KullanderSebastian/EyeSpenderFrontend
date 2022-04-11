@@ -1,4 +1,8 @@
 import React from "react";
+import * as am5 from "@amcharts/amcharts5";
+import * as am5xy from "@amcharts/amcharts5/xy";
+import * as am5percent from "@amcharts/amcharts5/percent";
+
 
 async function getUserId() {
     return fetch("http://localhost:3001/users/getuserid", {
@@ -10,7 +14,6 @@ async function getUserId() {
     })
     .then(data => data.json())
 }
-
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -36,16 +39,66 @@ class Dashboard extends React.Component {
 
             this.setState({
                 financeData: data.data
+            }, () => {
+                let root = am5.Root.new("chartdiv");
+                let chart = root.container.children.push(
+                  am5percent.PieChart.new(root, {
+                      radius: am5.percent(80),
+                      innerRadius: am5.percent(50)
+                  })
+                );
+
+                let series = chart.series.push(
+                  am5percent.PieSeries.new(root, {
+                    name: "Series",
+                    categoryField: "category",
+                    valueField: "amount"
+                  })
+                );
+
+                this.state.financeData.needs.map(financeData => {
+                    if (financeData.amount == 0) {
+                        return;
+                    } else {
+                        series.data.push({
+                            category: financeData.title,
+                            amount: financeData.amount
+                        });
+                    }
+                });
+
+                this.state.financeData.wants.map(financeData => {
+                    if (financeData.amount == 0) {
+                        return;
+                    } else {
+                        series.data.push({
+                            category: financeData.title,
+                            amount: financeData.amount
+                        });
+                    }
+                });
+
+                this.state.financeData.savings.map(financeData => {
+                    if (financeData.amount == 0) {
+                        return;
+                    } else {
+                        series.data.push({
+                            category: financeData.title,
+                            amount: financeData.amount
+                        });
+                    }
+                });
             });
 
-            console.log(this.state.financeData);
         };
         fetchFinanceData();
     }
 
     render() {
-
-        return <main className="dashboard"><h1>{this.state.financeData.salary}</h1></main>;
+        return <main className="dashboard">
+            <h1>Inkomst: {this.state.financeData.salary}</h1>
+            <div id="chartdiv"></div>
+        </main>;
     }
 }
 
