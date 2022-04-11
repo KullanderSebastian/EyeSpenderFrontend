@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 async function loginUser(credentials) {
@@ -12,9 +13,21 @@ async function loginUser(credentials) {
     .then(data => data.json())
 }
 
+async function getUserSetupStatus(username) {
+    return fetch("http://localhost:3001/users/getusersetupstatus", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ "username": username })
+    })
+    .then(data => data.json())
+}
+
 function SplashPage({ setToken }) {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
+    let history = useHistory();
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -25,6 +38,14 @@ function SplashPage({ setToken }) {
 
         sessionStorage.setItem("username", username);
         setToken(token.token);
+
+        let status = await getUserSetupStatus(username);
+
+        if (status.data === false) {
+            history.push("/finances");
+        } else {
+            history.push("/dashboard");
+        }
     }
 
     return (

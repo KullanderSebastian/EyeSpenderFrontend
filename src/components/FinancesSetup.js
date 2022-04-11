@@ -27,6 +27,17 @@ async function saveFinances(data) {
     .then(data => data.json())
 }
 
+async function changeUserFinanceSetupStatus() {
+    return fetch("http://localhost:3001/users/updateusersetupstatus", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"username": sessionStorage.getItem("username")})
+    })
+    .then(data => data.json())
+}
+
 function FinancesSetup({ auth }) {
     const [whichState, declareState] = useState("welcome");
     const [salaryAmount, setSalary] = useState();
@@ -236,7 +247,9 @@ function FinancesSetup({ auth }) {
             "savings": needsInput.savings
         });
 
-        console.log(res);
+        const res2 = await changeUserFinanceSetupStatus();
+
+        console.log(res, res2);
     }
 
     if (whichState === "welcome") {
