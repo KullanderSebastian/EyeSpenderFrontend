@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import Input from "./Input";
 import spargris from "../svg/spargris.svg";
 import mynt from "../svg/Mynt.svg";
@@ -26,7 +27,7 @@ async function saveFinances(data) {
     .then(data => data.json())
 }
 
-function FinancesSetup() {
+function FinancesSetup({ auth }) {
     const [whichState, declareState] = useState("welcome");
     const [salaryAmount, setSalary] = useState();
     const [userId, setUserId] = useState();
@@ -128,6 +129,10 @@ function FinancesSetup() {
         })
         .then(data => console.log(data.text()))
     }, []);
+
+    if (!auth) {
+        return <Redirect to ="/splash" />;
+    }
 
     let content;
 

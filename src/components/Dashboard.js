@@ -1,6 +1,6 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import * as am5 from "@amcharts/amcharts5";
-import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
 
@@ -43,7 +43,7 @@ class Dashboard extends React.Component {
                 let root = am5.Root.new("chartdiv");
                 let chart = root.container.children.push(
                   am5percent.PieChart.new(root, {
-                      radius: am5.percent(80),
+                      radius: am5.percent(75),
                       innerRadius: am5.percent(50)
                   })
                 );
@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
                 );
 
                 this.state.financeData.needs.map(financeData => {
-                    if (financeData.amount == 0) {
+                    if (financeData.amount === 0) {
                         return;
                     } else {
                         series.data.push({
@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
                 });
 
                 this.state.financeData.wants.map(financeData => {
-                    if (financeData.amount == 0) {
+                    if (financeData.amount === 0) {
                         return;
                     } else {
                         series.data.push({
@@ -79,7 +79,7 @@ class Dashboard extends React.Component {
                 });
 
                 this.state.financeData.savings.map(financeData => {
-                    if (financeData.amount == 0) {
+                    if (financeData.amount === 0) {
                         return;
                     } else {
                         series.data.push({
@@ -94,7 +94,12 @@ class Dashboard extends React.Component {
         fetchFinanceData();
     }
 
+
     render() {
+        if (!this.props.auth) {
+            return <Redirect to ="/splash" />;
+        }
+
         return <main className="dashboard">
             <h1>Inkomst: {this.state.financeData.salary}</h1>
             <div id="chartdiv"></div>
