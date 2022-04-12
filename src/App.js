@@ -13,13 +13,14 @@ function App() {
     const { token, setToken } = useToken();
         return (
             <div className="app">
-                <Header />
                 <BrowserRouter>
                     <Switch>
                         <Route path="/splash">
+                            <Header />
                             <SplashPage setToken={setToken}/>
                         </Route>
                         <Route path="/register">
+                            <Header />
                             <Register />
                         </Route>
                         <Route path="/finances">
@@ -29,7 +30,7 @@ function App() {
                             <Dashboard auth={token} />
                         </Route>
                         <Route path="/profile">
-                            <Profile auth={token} />
+                            <Profile auth={token}/>
                         </Route>
                     </Switch>
                 </BrowserRouter>

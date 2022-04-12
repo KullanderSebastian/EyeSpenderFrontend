@@ -19,7 +19,8 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            financeData: {}
+            financeData: {},
+            totalSpending: 0
         }
     }
 
@@ -41,10 +42,12 @@ class Dashboard extends React.Component {
                 financeData: data.data
             }, () => {
                 let root = am5.Root.new("chartdiv");
+
+                root._logo.dispose();
                 let chart = root.container.children.push(
                   am5percent.PieChart.new(root, {
-                      radius: am5.percent(75),
-                      innerRadius: am5.percent(50)
+                      radius: am5.percent(90),
+                      innerRadius: am5.percent(85),
                   })
                 );
 
@@ -52,9 +55,14 @@ class Dashboard extends React.Component {
                   am5percent.PieSeries.new(root, {
                     name: "Series",
                     categoryField: "category",
-                    valueField: "amount"
+                    valueField: "amount",
+                    startAngle: -230,
+                    endAngle: 50,
+                    //alignLabels: false
                   })
                 );
+
+                let tempSpending = 0;
 
                 this.state.financeData.needs.map(financeData => {
                     if (financeData.amount === 0) {
@@ -88,6 +96,15 @@ class Dashboard extends React.Component {
                         });
                     }
                 });
+
+                series.labels.template.set("visible", false);
+                series.ticks.template.set("visible", false);
+                series.slices.template.set("tooltipText", "[bold]{category} \n[bold]{value}kr");
+                series.slices.template.set("cornerRadius", 5);
+                series.slices.template.setAll({
+                    //fill: am5.color(0xffffff),
+                    stroke: am5.color(0xffffff)
+                });
             });
 
         };
@@ -101,8 +118,18 @@ class Dashboard extends React.Component {
         }
 
         return <main className="dashboard">
-            <h1>Inkomst: {this.state.financeData.salary}</h1>
-            <div id="chartdiv"></div>
+            <div className="fullscreen">
+                <div className="chartBg">
+                    <div id="chartdiv"></div>
+                    <div className="spendingText">
+                        <p id="spendAmount">18150 kr</p>
+                        <p id="spendText">Totalt spenderande</p>
+                    </div>
+                </div>
+                <div className="savingsDiv">
+                    <h1>Sparande</h1>
+                </div>
+            </div>
         </main>;
     }
 }
