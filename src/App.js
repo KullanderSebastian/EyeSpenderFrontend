@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./styles/App.scss";
 import Header from "./components/Header";
+import MobileMenu from "./components/MobileMenu";
 import SplashPage from "./components/SplashPage";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
@@ -28,9 +29,11 @@ function App() {
                         </Route>
                         <Route path="/dashboard">
                             <Dashboard auth={token} />
+                            <MobileMenu />
                         </Route>
                         <Route path="/profile">
                             <Profile auth={token}/>
+                            <MobileMenu />
                         </Route>
                     </Switch>
                 </BrowserRouter>

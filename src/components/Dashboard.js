@@ -20,7 +20,8 @@ class Dashboard extends React.Component {
         super(props);
         this.state = {
             financeData: {},
-            totalSpending: 0
+            totalSpending: 0,
+            sliceData: []
         }
     }
 
@@ -105,14 +106,42 @@ class Dashboard extends React.Component {
                     //fill: am5.color(0xffffff),
                     stroke: am5.color(0xffffff)
                 });
-            });
 
+                //this.setState({
+                    //series._settings.colors._settings.colors.map((color) => console.log(color);)
+                    //sliceData: series._settings.colors._settings.colors
+                //})
+
+                //console.log(series.slices._values[0]._settings.colors;
+                //console.log(series._settings.colors._settings.colors[0].toCSSHex());
+                let colorArray = [];
+                series._settings.colors._settings.colors.map((color) => colorArray.push(color.toCSSHex()));
+                this.setState({
+                    sliceData: colorArray
+                })
+                //console.log(series._settings.colors._settings.colors);
+            });
         };
         fetchFinanceData();
     }
 
 
     render() {
+        let tempTitleArray = [];
+        let tempAmountArray = [];
+        //console.log(this.state.sliceData);
+        //console.log(this.state.financeData.needs);
+        //if (this.state.financeData.needs) {
+        //    this.state.financeData.needs.map(financeData => {
+        //        if (financeData.amount === 0) {
+        //            return;
+        //        } else {
+        //            tempTitleArray.push(financeData.title);
+        //            tempAmountArray.push(financeData.amounts);
+        //        }
+        //    });
+        //}
+
         if (!this.props.auth) {
             return <Redirect to ="/splash" />;
         }
@@ -123,11 +152,11 @@ class Dashboard extends React.Component {
                     <div id="chartdiv"></div>
                     <div className="spendingText">
                         <p id="spendAmount">18150 kr</p>
-                        <p id="spendText">Totalt spenderande</p>
+                        <p id="spendText">Ditt Spenderande</p>
                     </div>
                 </div>
                 <div className="savingsDiv">
-                    <h1>Sparande</h1>
+                    <h3>Utgifter</h3>
                 </div>
             </div>
         </main>;
