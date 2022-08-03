@@ -314,7 +314,7 @@ h1, h2, h3, h4, h5, h6 {
 
     .savingsDiv {
         width: 100%;
-        height: 80%;
+        padding-bottom: 9vh;
         margin: 0 auto;
         background-color: white;
         border-top-right-radius: 35px;
@@ -356,6 +356,22 @@ h1, h2, h3, h4, h5, h6 {
         //-webkit-box-shadow: 0 1px 6px 0px black;
 	    //-moz-box-shadow: 0 1px 6px 0px black;
 	    //box-shadow: 0 1px 6px 0px black;
+    }
+
+    .dot {
+        height: 13px;
+        width: 13px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 10px;
+        margin-left: 3.6em;
+        margin-top: 1em;
+    }
+
+    .amount {
+        float: right;
+        margin-top: 14px;
+        padding-right: 3.6em;
     }
 }
 

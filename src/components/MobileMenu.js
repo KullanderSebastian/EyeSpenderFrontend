@@ -15,7 +15,7 @@ function MobileMenu() {
         <nav className="mobileMenu">
             <ul className="items">
                 <li>
-                    <NavLink className="link" to="dashboard">
+                    <NavLink className="link" to="/dashboard">
                         <AiOutlineHome />
                         <br></br>
                         Hem
@@ -35,7 +35,7 @@ function MobileMenu() {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="link" to="profile">
+                    <NavLink className="link" to="/profile">
                         <CgProfile />
                         <br></br>
                         Profil

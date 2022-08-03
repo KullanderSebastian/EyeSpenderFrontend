@@ -21,7 +21,8 @@ class Dashboard extends React.Component {
         this.state = {
             financeData: {},
             totalSpending: 0,
-            sliceData: []
+            sliceData: [],
+            dataIsLoaded: false
         }
     }
 
@@ -81,23 +82,18 @@ class Dashboard extends React.Component {
                 series.slices.template.set("tooltipText", "[bold]{category} \n[bold]{value}kr");
                 series.slices.template.set("cornerRadius", 5);
                 series.slices.template.setAll({
-                    //fill: am5.color(0xffffff),
                     stroke: am5.color(0xffffff)
                 });
 
-                //this.setState({
-                    //series._settings.colors._settings.colors.map((color) => console.log(color);)
-                    //sliceData: series._settings.colors._settings.colors
-                //})
-
-                //console.log(series.slices._values[0]._settings.colors;
                 //console.log(series._settings.colors._settings.colors[0].toCSSHex());
                 let colorArray = [];
                 series._settings.colors._settings.colors.map((color) => colorArray.push(color.toCSSHex()));
                 this.setState({
                     sliceData: colorArray
                 })
-                //console.log(series._settings.colors._settings.colors);
+            });
+            this.setState({
+                dataIsLoaded: true
             });
         };
         fetchFinanceData();
@@ -105,20 +101,7 @@ class Dashboard extends React.Component {
 
 
     render() {
-        let tempTitleArray = [];
-        let tempAmountArray = [];
-        //console.log(this.state.sliceData);
-        //console.log(this.state.financeData.needs);
-        //if (this.state.financeData.needs) {
-        //    this.state.financeData.needs.map(financeData => {
-        //        if (financeData.amount === 0) {
-        //            return;
-        //        } else {
-        //            tempTitleArray.push(financeData.title);
-        //            tempAmountArray.push(financeData.amounts);
-        //        }
-        //    });
-        //}
+        let i = 0;
 
         if (!this.props.auth) {
             return <Navigate to ="/splash" />;
@@ -135,6 +118,15 @@ class Dashboard extends React.Component {
                 </div>
                 <div className="savingsDiv">
                     <h3>Utgifter</h3>
+                    {this.state.dataIsLoaded ? this.state.financeData.spendings[0].expenditure.map((financeData) => {
+                        if (financeData.amount === 0) {
+                            return;
+                        } else {
+                            const dotColor = this.state.sliceData[i];
+                            i = i + 1;
+                            return <div className="spendingsVisual"><div className="dot" style={{backgroundColor: dotColor}}></div>{financeData.title} <div className="amount">{financeData.amount}:-</div></div>
+                        }
+                    }) : null}
                 </div>
             </div>
         </main>;
