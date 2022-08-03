@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/App.scss";
 import Header from "./components/Header";
 import MobileMenu from "./components/MobileMenu";
@@ -15,27 +15,35 @@ function App() {
         return (
             <div className="app">
                 <BrowserRouter>
-                    <Switch>
-                        <Route path="/splash">
-                            <Header />
-                            <SplashPage setToken={setToken}/>
-                        </Route>
-                        <Route path="/register">
-                            <Header />
-                            <Register />
-                        </Route>
-                        <Route path="/finances">
-                            <FinancesSetup auth={token} />
-                        </Route>
-                        <Route path="/dashboard">
-                            <Dashboard auth={token} />
-                            <MobileMenu />
-                        </Route>
-                        <Route path="/profile">
-                            <Profile auth={token}/>
-                            <MobileMenu />
-                        </Route>
-                    </Switch>
+                    <Routes>
+                    <Route path="/splash" element={
+                            <React.Fragment>
+                                <Header />
+                                <SplashPage setToken={setToken}/>
+                            </React.Fragment>
+                    }/>
+                    <Route path="/register" element={
+                            <React.Fragment>
+                                <Header />
+                                <Register />
+                            </React.Fragment>
+                    }/>
+                    <Route path="/finances" element={
+                            <FinancesSetup auth={token}/>
+                    }/>
+                    <Route path="/dashboard" element={
+                            <React.Fragment>
+                                <Dashboard auth={token} />
+                                <MobileMenu />
+                            </React.Fragment>
+                    }/>
+                    <Route path="/profile" element={
+                            <React.Fragment>
+                                <Profile auth={token} />
+                                <MobileMenu/>
+                            </React.Fragment>
+                    }/>
+                    </Routes>
                 </BrowserRouter>
             </div>
           );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
@@ -65,29 +65,7 @@ class Dashboard extends React.Component {
 
                 let tempSpending = 0;
 
-                this.state.financeData.needs.map(financeData => {
-                    if (financeData.amount === 0) {
-                        return;
-                    } else {
-                        series.data.push({
-                            category: financeData.title,
-                            amount: financeData.amount
-                        });
-                    }
-                });
-
-                this.state.financeData.wants.map(financeData => {
-                    if (financeData.amount === 0) {
-                        return;
-                    } else {
-                        series.data.push({
-                            category: financeData.title,
-                            amount: financeData.amount
-                        });
-                    }
-                });
-
-                this.state.financeData.savings.map(financeData => {
+                this.state.financeData.spendings[0].expenditure.map(financeData => {
                     if (financeData.amount === 0) {
                         return;
                     } else {
@@ -143,7 +121,7 @@ class Dashboard extends React.Component {
         //}
 
         if (!this.props.auth) {
-            return <Redirect to ="/splash" />;
+            return <Navigate to ="/splash" />;
         }
 
         return <main className="dashboard">

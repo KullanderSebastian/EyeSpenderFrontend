@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 async function loginUser(credentials) {
@@ -27,7 +27,7 @@ async function getUserSetupStatus(username) {
 function SplashPage({ setToken }) {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
-    let history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -42,9 +42,9 @@ function SplashPage({ setToken }) {
         let status = await getUserSetupStatus(username);
 
         if (status.data === false) {
-            history.push("/finances");
+            navigate("/finances");
         } else {
-            history.push("/dashboard");
+            navigate("/dashboard");
         }
     }
 

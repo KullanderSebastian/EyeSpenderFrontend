@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Input from "./Input";
 import spargris from "../svg/spargris.svg";
 import mynt from "../svg/Mynt.svg";
@@ -42,92 +42,74 @@ function FinancesSetup({ auth }) {
     const [whichState, declareState] = useState("welcome");
     const [salaryAmount, setSalary] = useState();
     const [userId, setUserId] = useState();
-    const [needsInput, setNeedsInputs] = useState({
-            needs: [
-                {
-                    title: "Hyra",
-                    category: "rent",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Hemfkrn",
-                    category: "homeinsurance",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Mat",
-                    category: "food",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Bensin",
-                    category: "petrol",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Bilfkrn",
-                    category: "carinsurance",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "SL kort",
-                    category: "slcard",
-                    timeframe: "permonth",
-                    amount: 0
-                }
-            ],
-            wants: [
-                {
-                    title: "Mobil",
-                    category: "mobilebill",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Snus",
-                    category: "tobacco",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Kläder",
-                    category: "clothes",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Träning",
-                    category: "training",
-                    timeframe: "permonth",
-                    amount: 0
-                }
-
-            ],
-            savings: [
-                {
-                    title: "Fonder",
-                    category: "stocks",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Sparande",
-                    categoru: "savings",
-                    timeframe: "permonth",
-                    amount: 0
-                },
-                {
-                    title: "Pension",
-                    category: "pension",
-                    timeframe: "permonth",
-                    amount: 0
-                }
-            ]
+    const [spendings, setSpendings] = useState({
+        expenditure: [
+            {
+                title: "Hyra",
+                category: "rent",
+                amount: 0
+            },
+            {
+                title: "Hemfkrn",
+                category: "homeinsurance",
+                amount: 0
+            },
+            {
+                title: "Mat",
+                category: "food",
+                amount: 0
+            },
+            {
+                title: "Bensin",
+                category: "petrol",
+                amount: 0
+            },
+            {
+                title: "Bilfkrn",
+                category: "carinsurance",
+                amount: 0
+            },
+            {
+                title: "SL kort",
+                category: "slcard",
+                amount: 0
+            },
+            {
+                title: "Mobil",
+                category: "mobilebill",
+                amount: 0
+            },
+            {
+                title: "Snus",
+                category: "tobacco",
+                amount: 0
+            },
+            {
+                title: "Kläder",
+                category: "clothes",
+                amount: 0
+            },
+            {
+                title: "Träning",
+                category: "training",
+                amount: 0
+            },
+            {
+                title: "Fonder",
+                category: "stocks",
+                amount: 0
+            },
+            {
+                title: "Sparande",
+                categoru: "savings",
+                amount: 0
+            },
+            {
+                title: "Pension",
+                category: "pension",
+                amount: 0
+            }
+        ]
     });
 
     useEffect(() => {
@@ -142,7 +124,7 @@ function FinancesSetup({ auth }) {
     }, []);
 
     if (!auth) {
-        return <Redirect to ="/splash" />;
+        return <Navigate to ="/splash" />;
     }
 
     let content;
@@ -165,18 +147,6 @@ function FinancesSetup({ auth }) {
                 break;
         }
     }
-
-/*    const addInput = e => {
-        e.preventDefault();
-
-        setNeedsInputs(prevState => ({
-            inputs: [...prevState.inputs, {
-                id: "c" + prevState.inputs.length - 1,
-                category: "choose",
-                amount: 0
-            }]
-        }));
-    }*/
 
     const addCoins = () => {
         var html = [];
@@ -204,32 +174,9 @@ function FinancesSetup({ auth }) {
     const handleChange = (e) => {
         e.preventDefault();
 
-        setNeedsInputs(prevState => ({
-            needs: prevState.needs.map(
+        setSpendings(prevState => ({
+            expenditure: prevState.expenditure.map(
                 el => el.title === e.target.parentNode.firstChild.outerText? { ...el, amount: e.target.value}: el
-            ),
-            wants: prevState.wants.map(
-                el => el.title === e.target.parentNode.firstChild.outerText? { ...el, amount: e.target.value}: el
-            ),
-            savings: prevState.savings.map(
-                el => el.title === e.target.parentNode.firstChild.outerText? { ...el, amount: e.target.value}: el
-            )
-
-        }));
-    }
-
-    const handleChangeSelect = (e) => {
-        e.preventDefault();
-
-        setNeedsInputs(prevState => ({
-            needs: prevState.needs.map(
-                el => el.title === e.target.attributes[0].nodeValue? { ...el, timeframe: e.target.value}: el
-            ),
-            wants: prevState.wants.map(
-                el => el.title === e.target.attributes[0].nodeValue? { ...el, timeframe: e.target.value}: el
-            ),
-            savings: prevState.savings.map(
-                el => el.title === e.target.attributes[0].nodeValue? { ...el, timeframe: e.target.value}: el
             )
         }));
     }
@@ -242,9 +189,7 @@ function FinancesSetup({ auth }) {
         const res = await saveFinances({
             "userid": userId.data,
             "salary": salaryAmount,
-            "needs": needsInput.needs,
-            "wants": needsInput.wants,
-            "savings": needsInput.savings
+            "spendings": spendings
         });
 
         const res2 = await changeUserFinanceSetupStatus();
@@ -281,24 +226,16 @@ function FinancesSetup({ auth }) {
                     <h2>Nödvändigheter</h2>
                     <p>Vänligen ange dina nödvändigheter varje månad. Detta brukar
                     anses vara utgifter som inte går att leva utan.</p>
-
                     <form>
-                        {needsInput.needs.map((obj) =>
+                        {spendings.expenditure.slice(0, 6).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
-                                <img className="information" src={infoCircle} />
                                 <input
                                     name={obj.category}
                                     placeholder="0.00"
-                                    value={obj.amount}
+                                    value={obj.amount?obj.amount : ""}
                                     onChange={handleChange}
                                 />
-                                <select classname={obj.title} value={obj.timeframe} onChange={handleChangeSelect} >
-                                    <option value="perday">Per Dag</option>
-                                    <option value="perweek">Per Vecka</option>
-                                    <option value="perweek2">Per 2 Veckor</option>
-                                    <option value="permonth">Per Månad</option>
-                                </select>
                             </div>
                         )}
                         <button onClick={goForward}>Nästa</button>
@@ -311,22 +248,15 @@ function FinancesSetup({ auth }) {
                     men kan ändå klassas som inte nödvändiga.</p>
 
                     <form>
-                        {needsInput.wants.map((obj) =>
+                        {spendings.expenditure.slice(6, 10).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
-                                <img className="information" src={infoCircle} />
                                 <input
                                     name={obj.category}
                                     placeholder="0.00"
-                                    value={obj.amount}
+                                    value={obj.amount?obj.amount : ""}
                                     onChange={handleChange}
                                 />
-                                <select classname={obj.title} value={obj.timeframe} onChange={handleChangeSelect} >
-                                    <option value="perday">Per Dag</option>
-                                    <option value="perweek">Per Vecka</option>
-                                    <option value="perweek2">Per 2 Veckor</option>
-                                    <option selected value="permonth">Per Månad</option>
-                                </select>
                             </div>
                         )}
                         <button onClick={goForward}>Nästa</button>
@@ -338,22 +268,15 @@ function FinancesSetup({ auth }) {
                     <p>Olika former av sparande</p>
 
                     <form>
-                        {needsInput.savings.map((obj) =>
+                        {spendings.expenditure.slice(10, 13).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
-                                <img className="information" src={infoCircle} />
                                 <input
                                     name={obj.category}
                                     placeholder="0.00"
-                                    value={obj.amount}
+                                    value={obj.amount?obj.amount : ""}
                                     onChange={handleChange}
                                 />
-                                <select classname={obj.title} value={obj.timeframe} onChange={handleChangeSelect} >
-                                    <option value="perday">Per Dag</option>
-                                    <option value="perweek">Per Vecka</option>
-                                    <option value="perweek2">Per 2 Veckor</option>
-                                    <option selected value="permonth">Per Månad</option>
-                                </select>
                             </div>
                         )}
                         <button onClick={handleSubmit}>Spara</button>

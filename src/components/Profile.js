@@ -1,12 +1,12 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import profileIcon from "../svg/user-circle.svg";
 import { TbEditCircle } from "react-icons/tb";
 
 
 function Profile({ auth }) {
     if (!auth) {
-        return <Redirect to ="/splash" />;
+        return <Navigate to ="/splash" />;
     }
     return (
         <div className="profilePage">
