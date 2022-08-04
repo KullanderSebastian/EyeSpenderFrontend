@@ -101,10 +101,21 @@ class Dashboard extends React.Component {
 
 
     render() {
-        let i = 0;
-
         if (!this.props.auth) {
             return <Navigate to ="/splash" />;
+        }
+
+        let i = 0;
+        let totalSpending = 0;
+
+        if (this.state.dataIsLoaded) {
+            this.state.financeData.spendings[0].expenditure.map((financeData) => {
+                if (financeData.amount === 0) {
+                    return;
+                } else {
+                    totalSpending += parseFloat(financeData.amount);
+                }
+            });
         }
 
         return <main className="dashboard">
@@ -112,7 +123,7 @@ class Dashboard extends React.Component {
                 <div className="chartBg">
                     <div id="chartdiv"></div>
                     <div className="spendingText">
-                        <p id="spendAmount">18150 kr</p>
+                        <p id="spendAmount">{totalSpending}:-</p>
                         <p id="spendText">Ditt Spenderande</p>
                     </div>
                 </div>

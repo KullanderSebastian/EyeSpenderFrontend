@@ -380,6 +380,36 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     background-color: $oceanBlue;
 
+    .testInputs:first-of-type {
+        margin-top: 2em;
+    }
+
+    .testInputs {
+        background-color: #F5F5F5;
+        margin-top: 1em;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-right: 0.5em;
+        border-radius: 5px;
+        overflow: hidden;
+        line-height: 36.5px;
+
+        input {
+            width: 25%;
+            margin-top: 0;
+            background-color: white;
+            margin-left: 0.5em;
+            border: 1px solid black;
+            float: right;
+        }
+
+        h3 {
+            margin-left: 0.5em;
+            font-size: 14px;
+            display: inline-block;
+        }
+    }
+
     .background {
         top: 0;
         left: 0;
@@ -387,6 +417,15 @@ h1, h2, h3, h4, h5, h6 {
         right: 0;
         overflow: auto;
         padding-bottom: 2em;
+
+        svg {
+            font-size: 30px;
+            padding-right: 1em;
+            display:inline-block;
+            float: right;
+            padding-top: calc(2em + 15px);
+            color: white;
+        }
     }
 
     .profile {
@@ -402,26 +441,33 @@ h1, h2, h3, h4, h5, h6 {
         margin-top: 1em;
     }
 
-    svg {
-        font-size: 30px;
-        padding-right: 1em;
-        display:inline-block;
-        float: right;
-        padding-top: calc(2em + 15px);
-        color: white;
-    }
-
-    img {
-        fill: white;
-    }
-
-    .profileInformationPage {
+    .profilePageMenu {
         background-color: white;
         border-top-right-radius: 35px;
         border-top-left-radius: 35px;
-        padding-left: 2em;
-        padding-top: 2em;
+        padding-bottom: 10vh;
+    }
+
+    .menuItem {
+        padding: 2em;
+        display: flex;
+        justify-content: space-between;
+
+
+        p {
+        }
+
+        svg {
+            margin-top: 2px;
+        }
+    }
+
+    button {
+        display: table;
         margin: 0 auto;
+        margin-top: 1em;
+        width: 50%;
+        color: black;
     }
 }
 

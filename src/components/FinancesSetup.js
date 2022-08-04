@@ -227,7 +227,7 @@ function FinancesSetup({ auth }) {
                     <p>Vänligen ange dina nödvändigheter varje månad. Detta brukar
                     anses vara utgifter som inte går att leva utan.</p>
                     <form>
-                        {spendings.expenditure.slice(0, 6).map((obj) =>
+                            {spendings.expenditure.slice(0, 6).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
                                 <input
