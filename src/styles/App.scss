@@ -423,22 +423,24 @@ h1, h2, h3, h4, h5, h6 {
             padding-right: 1em;
             display:inline-block;
             float: right;
-            padding-top: calc(2em + 15px);
+            padding-top: calc(2.5em + 15px);
             color: white;
         }
     }
 
     .profile {
         margin-top: 1em;
-        margin-left: 2em;
+        margin-left: 3.5em;
         width: 75px;
-        text-align: center;
         display:inline-block;
         color: white;
     }
 
-    .icon {
-        margin-top: 1em;
+    .profilePicture {
+        svg {
+            margin-top: 0.5em;
+            padding: 0;
+        }
     }
 
     .profilePageMenu {

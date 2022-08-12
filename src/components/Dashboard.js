@@ -19,7 +19,7 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            financeData: {},
+            financeData: [],
             totalSpending: 0,
             sliceData: [],
             dataIsLoaded: false
@@ -40,8 +40,10 @@ class Dashboard extends React.Component {
 
             const data = await response.json();
 
+            console.log(data.data.spendings);
+
             this.setState({
-                financeData: data.data
+                financeData: data.data.spendings
             }, () => {
                 let root = am5.Root.new("chartdiv");
 
@@ -66,7 +68,7 @@ class Dashboard extends React.Component {
 
                 let tempSpending = 0;
 
-                this.state.financeData.spendings[0].expenditure.map(financeData => {
+                this.state.financeData.map(financeData => {
                     if (financeData.amount === 0) {
                         return;
                     } else {
@@ -109,7 +111,7 @@ class Dashboard extends React.Component {
         let totalSpending = 0;
 
         if (this.state.dataIsLoaded) {
-            this.state.financeData.spendings[0].expenditure.map((financeData) => {
+            this.state.financeData.map((financeData) => {
                 if (financeData.amount === 0) {
                     return;
                 } else {
@@ -129,7 +131,7 @@ class Dashboard extends React.Component {
                 </div>
                 <div className="savingsDiv">
                     <h3>Utgifter</h3>
-                    {this.state.dataIsLoaded ? this.state.financeData.spendings[0].expenditure.map((financeData) => {
+                    {this.state.dataIsLoaded ? this.state.financeData.map((financeData) => {
                         if (financeData.amount === 0) {
                             return;
                         } else {

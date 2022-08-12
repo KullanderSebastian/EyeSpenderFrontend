@@ -38,79 +38,79 @@ async function changeUserFinanceSetupStatus() {
     .then(data => data.json())
 }
 
+let spendingsList = [
+    {
+        title: "Hyra",
+        category: "rent",
+        amount: 0
+    },
+    {
+        title: "Hemfkrn",
+        category: "homeinsurance",
+        amount: 0
+    },
+    {
+        title: "Mat",
+        category: "food",
+        amount: 0
+    },
+    {
+        title: "Bensin",
+        category: "petrol",
+        amount: 0
+    },
+    {
+        title: "Bilfkrn",
+        category: "carinsurance",
+        amount: 0
+    },
+    {
+        title: "SL kort",
+        category: "slcard",
+        amount: 0
+    },
+    {
+        title: "Mobil",
+        category: "mobilebill",
+        amount: 0
+    },
+    {
+        title: "Snus",
+        category: "tobacco",
+        amount: 0
+    },
+    {
+        title: "Kläder",
+        category: "clothes",
+        amount: 0
+    },
+    {
+        title: "Träning",
+        category: "training",
+        amount: 0
+    },
+    {
+        title: "Fonder",
+        category: "stocks",
+        amount: 0
+    },
+    {
+        title: "Sparande",
+        categoru: "savings",
+        amount: 0
+    },
+    {
+        title: "Pension",
+        category: "pension",
+        amount: 0
+    }
+];
+
 function FinancesSetup({ auth }) {
     const [whichState, declareState] = useState("welcome");
     const [salaryAmount, setSalary] = useState();
     const [userId, setUserId] = useState();
-    const [spendings, setSpendings] = useState({
-        expenditure: [
-            {
-                title: "Hyra",
-                category: "rent",
-                amount: 0
-            },
-            {
-                title: "Hemfkrn",
-                category: "homeinsurance",
-                amount: 0
-            },
-            {
-                title: "Mat",
-                category: "food",
-                amount: 0
-            },
-            {
-                title: "Bensin",
-                category: "petrol",
-                amount: 0
-            },
-            {
-                title: "Bilfkrn",
-                category: "carinsurance",
-                amount: 0
-            },
-            {
-                title: "SL kort",
-                category: "slcard",
-                amount: 0
-            },
-            {
-                title: "Mobil",
-                category: "mobilebill",
-                amount: 0
-            },
-            {
-                title: "Snus",
-                category: "tobacco",
-                amount: 0
-            },
-            {
-                title: "Kläder",
-                category: "clothes",
-                amount: 0
-            },
-            {
-                title: "Träning",
-                category: "training",
-                amount: 0
-            },
-            {
-                title: "Fonder",
-                category: "stocks",
-                amount: 0
-            },
-            {
-                title: "Sparande",
-                categoru: "savings",
-                amount: 0
-            },
-            {
-                title: "Pension",
-                category: "pension",
-                amount: 0
-            }
-        ]
-    });
+    const [spendings, setSpendings] = useState(spendingsList);
 
     useEffect(() => {
         fetch("http://localhost:3001/users/getuserid", {
@@ -174,11 +174,30 @@ function FinancesSetup({ auth }) {
     const handleChange = (e) => {
         e.preventDefault();
 
-        setSpendings(prevState => ({
-            expenditure: prevState.expenditure.map(
-                el => el.title === e.target.parentNode.firstChild.outerText? { ...el, amount: e.target.value}: el
-            )
-        }));
+        //setSpendings(prevState => {
+        //    prevState.map(
+        //        el => el.title === e.target.parentNode.firstChild.outerText ? { ...el, amount: e.target.value}: el
+        //    )
+        //});
+
+        spendingsList = spendingsList.map(
+            el => el.title === e.target.parentNode.firstChild.outerText ? { ...el, amount: e.target.value } : el
+        );
+
+        setSpendings(spendingsList);
+
+        //setSpendings(prevState => {
+        //    prevState.map(
+        //        el => { console.log(el)}
+        //    )
+        //});
+
+
+        //setSpendings(prevState => ({
+        //    prevState.map(
+        //        el => el.title === e.target.parentNode.firstChild.outerText? { ...el, amount: e.target.value}: el
+        //    )
+        //}));
     }
 
     const handleSubmit = async e => {
@@ -227,7 +246,8 @@ function FinancesSetup({ auth }) {
                     <p>Vänligen ange dina nödvändigheter varje månad. Detta brukar
                     anses vara utgifter som inte går att leva utan.</p>
                     <form>
-                            {spendings.expenditure.slice(0, 6).map((obj) =>
+                        {console.log("Spendings in expenses: " + spendings)}
+                        {spendings.slice(0, 6).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
                                 <input
@@ -248,7 +268,7 @@ function FinancesSetup({ auth }) {
                     men kan ändå klassas som inte nödvändiga.</p>
 
                     <form>
-                        {spendings.expenditure.slice(6, 10).map((obj) =>
+                        {spendings.slice(6, 10).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
                                 <input
@@ -268,7 +288,7 @@ function FinancesSetup({ auth }) {
                     <p>Olika former av sparande</p>
 
                     <form>
-                        {spendings.expenditure.slice(10, 13).map((obj) =>
+                        {spendings.slice(10, 13).map((obj) =>
                             <div className="testInputs">
                                 <h3>{obj.title}</h3>
                                 <input
