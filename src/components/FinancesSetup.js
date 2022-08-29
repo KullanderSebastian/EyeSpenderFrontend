@@ -17,7 +17,7 @@ async function getUserId() {
 }
 
 async function saveFinances(data) {
-    return fetch("http://localhost:3001/finances/savefinances", {
+    return fetch("http://localhost:3001/users/saveuserfinances", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -96,14 +96,14 @@ let spendingsList = [
     },
     {
         title: "Sparande",
-        categoru: "savings",
+        category: "savings",
         amount: 0
     },
     {
         title: "Pension",
         category: "pension",
         amount: 0
-    }
+    },
 ];
 
 function FinancesSetup({ auth }) {
@@ -205,10 +205,12 @@ function FinancesSetup({ auth }) {
 
         let userId = await getUserId();
 
+		console.log("DATA IN SUBMIT: " + userId.data + salaryAmount, spendings);
+
         const res = await saveFinances({
-            "userid": userId.data,
-            "salary": salaryAmount,
-            "spendings": spendings
+            "username": sessionStorage.getItem("username"),
+			"salary": salaryAmount,
+            "finances": spendings
         });
 
         const res2 = await changeUserFinanceSetupStatus();

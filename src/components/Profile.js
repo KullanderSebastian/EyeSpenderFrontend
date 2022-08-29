@@ -18,7 +18,7 @@ async function getUserId() {
 }
 
 async function updateFinance(data) {
-    return fetch("http://localhost:3001/finances/updatefinances", {
+    return fetch("http://localhost:3001/user/updateuserfinances", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -72,17 +72,17 @@ function Profile({ auth }) {
         const fetchFinanceData = async () => {
             const userId = await getUserId();
 
-            const response = await fetch("http://localhost:3001/finances/getfinances", {
+            const response = await fetch("http://localhost:3001/users/getuserfinances", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({"userid": userId.data})
+                body: JSON.stringify({"username": sessionStorage.getItem("username")})
             })
 
             const data = await response.json();
 
-            const finalData = data.data.spendings;
+            const finalData = data.data;
 
             setFinanceData(finalData);
             setFinanceDataUnchanged(finalData);

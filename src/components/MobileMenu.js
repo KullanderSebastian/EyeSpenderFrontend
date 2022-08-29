@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
+import { GiPayMoney } from "react-icons/gi";
 
 function MobileMenu() {
     let activeStyle = {
@@ -24,8 +25,18 @@ function MobileMenu() {
                         )}
                     </NavLink>
                 </li>
+				<li>
+					<NavLink className="link" to="/payments">
+						<GiPayMoney />
+						<br></br>
+						Betalningar
+						{({ isActive }) => (
+							<span className={isActive}></span>
+						)}
+					</NavLink>
+				</li>
                 <li>
-                    <NavLink className="link" to="statistik">
+                    <NavLink className="link" to="/statistics">
                         <IoStatsChartOutline />
                         <br></br>
                         Statistik

@@ -8,6 +8,8 @@ import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import FinancesSetup from "./components/FinancesSetup";
 import Register from "./components/Register";
+import Statistics from "./components/Statistics";
+import Payments from "./components/Payments";
 import useToken from "./components/useToken";
 
 function App() {
@@ -37,6 +39,18 @@ function App() {
                                 <MobileMenu />
                             </React.Fragment>
                     }/>
+					<Route path="/payments" element={
+						<React.Fragment>
+							<Payments auth={token} />
+							<MobileMenu/>
+						</React.Fragment>
+					}/>
+					<Route path="/statistics" element={
+						<React.Fragment>
+							<Statistics auth={token} />
+							<MobileMenu/>
+						</React.Fragment>
+					}/>
                     <Route path="/profile" element={
                             <React.Fragment>
                                 <Profile auth={token} />

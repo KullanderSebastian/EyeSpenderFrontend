@@ -473,6 +473,117 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+.statistics {
+	height: 100%;
+    width: 100%;
+
+	.fullscreen {
+		position: fixed;
+		background-color: $oceanBlue;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		overflow: auto;
+	}
+
+	.statisticsDiv {
+        width: 100%;
+        padding-bottom: 9vh;
+        margin: 0 auto;
+        background-color: white;
+        border-top-right-radius: 35px;
+        border-top-left-radius: 35px;
+
+        h3 {
+            padding-top: 1em;
+            padding-left: 3em;
+            font-weight: 600;
+        }
+    }
+
+	.pageTitle {
+        text-align: center;
+        margin-top: 2em;
+		margin-bottom: 2em;
+		color: white;
+    }
+}
+
+.payments {
+	height: 100%;
+	width: 100%;
+
+	.fullscreen {
+		position: fixed;
+		background-color: $oceanBlue;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		overflow: auto;
+	}
+
+	.paymentsDiv {
+        width: 100%;
+        padding-bottom: 9vh;
+        margin: 0 auto;
+        background-color: white;
+        border-top-right-radius: 35px;
+        border-top-left-radius: 35px;
+		padding-top: 2em;
+
+        h3 {
+            padding-top: 1em;
+            padding-left: 3em;
+            font-weight: 600;
+        }
+    }
+
+	.pageTitle {
+        text-align: center;
+        margin-top: 2em;
+		margin-bottom: 2em;
+		color: white;
+    }
+
+	button {
+		display: table;
+		margin: 0 auto;
+		margin-top: 1em;
+		width: 50%;
+		color: black;
+	}
+
+	.formPopup {
+		display: none;
+		position: fixed;
+		bottom: 208px;
+		border: 3px solid black;
+		z-index: 9;
+	}
+
+	.formContainer {
+		max-width: 300px;
+		padding: 10px;
+		background-color: white;
+		position: fixed;
+	}
+
+	.payment {
+		display: flex;
+		justify-content: space-between;
+
+		p:first-of-type {
+			margin-left: 2em;
+		}
+
+		p:last-of-type {
+			margin-right: 2em;
+		}
+	}
+}
+
 .active {
     color: black!important;
 }

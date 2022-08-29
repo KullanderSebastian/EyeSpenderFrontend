@@ -22,7 +22,8 @@ class Dashboard extends React.Component {
             financeData: [],
             totalSpending: 0,
             sliceData: [],
-            dataIsLoaded: false
+            dataIsLoaded: false,
+			categories: ["food", "entertainment", "transportation", "savings", "other"],
         }
     }
 
@@ -30,20 +31,38 @@ class Dashboard extends React.Component {
         const fetchFinanceData = async () => {
             const userId = await getUserId();
 
-            const response = await fetch("http://localhost:3001/finances/getfinances", {
+            const response = await fetch("http://localhost:3001/users/getuserfinances", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({"userid": userId.data})
+                body: JSON.stringify({"username": sessionStorage.getItem("username")})
             })
 
             const data = await response.json();
+			const date = new Date();
+			const month = date.getMonth();
 
-            console.log(data.data.spendings);
+        	const unplannedSpendingsResponse = await fetch("http://localhost:3001/finances/getpayments", {
+				method: "PATCH",
+				headers: {
+					"Content-type": "application/json"
+				},
+				body: JSON.stringify({"userId": userId.data, "month": month})
+			})
+
+			const data2 = await unplannedSpendingsResponse.json();
+
+			let concatinatedArray;
+
+			if (!data2.data) {
+				concatinatedArray = data.data;
+			} else {
+				concatinatedArray = data.data.concat(data2.data);
+			}
 
             this.setState({
-                financeData: data.data.spendings
+                financeData: concatinatedArray
             }, () => {
                 let root = am5.Root.new("chartdiv");
 
@@ -68,16 +87,59 @@ class Dashboard extends React.Component {
 
                 let tempSpending = 0;
 
-                this.state.financeData.map(financeData => {
-                    if (financeData.amount === 0) {
-                        return;
-                    } else {
-                        series.data.push({
-                            category: financeData.title,
-                            amount: financeData.amount
-                        });
-                    }
-                });
+				let cleanedArray = [];
+				let tempValues = {"food": 0, "entertainment": 0, "transportation": 0, "savings": 0, "other": 0}
+				let categoryNames = {"food": "Mat", "entertainment": "Nöje", "transportation": "Transport", "savings": "Sparande", "other": "Övrigt"}
+
+				this.state.financeData.map(financeData => {
+					if (this.state.categories.includes(financeData.category)) {
+						if (financeData.amount === 0) {
+							return;
+						} else {
+							tempValues[financeData.category] = tempValues[financeData.category] + financeData.amount;
+						}
+					} else {
+						if (financeData.amount === 0) {
+							return;
+						} else {
+							cleanedArray.push({
+								category: financeData.title,
+								amount: financeData.amount
+							})
+						}
+					}
+				})
+
+				for (var key in tempValues) {
+					if (tempValues[key] != 0) {
+						cleanedArray.push({
+							category: categoryNames[key],
+							amount: tempValues[key]
+						})
+					}
+				}
+
+				cleanedArray.map(financeData => {
+					series.data.push({
+						category: financeData.category,
+						amount: financeData.amount
+					});
+				});
+
+				this.setState({
+					financeData: cleanedArray
+				});
+
+                //this.state.financeData.map(financeData => {
+                //    if (financeData.amount === 0) {
+                //        return;
+                //    } else {
+                //        series.data.push({
+                //            category: financeData.title,
+                //            amount: financeData.amount
+                //        });
+                //    }
+                //});
 
                 series.labels.template.set("visible", false);
                 series.ticks.template.set("visible", false);
@@ -87,7 +149,6 @@ class Dashboard extends React.Component {
                     stroke: am5.color(0xffffff)
                 });
 
-                //console.log(series._settings.colors._settings.colors[0].toCSSHex());
                 let colorArray = [];
                 series._settings.colors._settings.colors.map((color) => colorArray.push(color.toCSSHex()));
                 this.setState({
@@ -137,7 +198,7 @@ class Dashboard extends React.Component {
                         } else {
                             const dotColor = this.state.sliceData[i];
                             i = i + 1;
-                            return <div className="spendingsVisual"><div className="dot" style={{backgroundColor: dotColor}}></div>{financeData.title} <div className="amount">{financeData.amount}:-</div></div>
+                            return <div className="spendingsVisual"><div className="dot" style={{backgroundColor: dotColor}}></div>{financeData.category} <div className="amount">{financeData.amount}:-</div></div>
                         }
                     }) : null}
                 </div>
