@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useFormik } from "formik";
+import { registerSchema } from "../schemas";
 
 async function createUser(credentials) {
     return fetch("http://localhost:3001/users/signup", {
@@ -12,8 +14,6 @@ async function createUser(credentials) {
 }
 
 function Register() {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
     const [usernameIsEntered, setUsernameBool] = useState(false);
     const [passwordIsEntered, setPasswordBool] = useState(false);
     const [registerError, setRegisterError] = useState({
@@ -22,32 +22,41 @@ function Register() {
     });
     let content;
 
-    const handleSubmit = async e => {
-        e.preventDefault();
+	const onSubmit = async (values, actions) => {
+		console.log(values);
 
-        const res = await createUser({
-            "username": username,
-            "password": password
-        });
+		const res = await createUser({
+			"username": values.username,
+			"password": values.password
+		});
 
-        if (!res.error) {
-            setRegisterError({
-                error: false
-            });
-        } else if (res.error) {
-            if (res.status === 400) {
-                setRegisterError({
-                    error: true,
-                    status: 400
-                });
-            } else if (res.status === 500) {
-                setRegisterError({
-                    error: true,
-                    status: 500
-                });
-            }
-        }
-    }
+		if (!res.error) {
+			setRegisterError({
+				error: false
+			});
+		} else if (res.error) {
+			if (res.status === 400) {
+				setRegisterError({
+					error: true,
+					status: 400
+				});
+			} else if (res.status === 500) {
+				setRegisterError({
+					error: true,
+					status: 500
+				});
+			}
+		}
+	}
+
+	const {values, errors, touched, isSubmitting, handleBlur, handleChange, handleSubmit} = useFormik({
+		initialValues: {
+			username: "",
+			password: ""
+		},
+		validationSchema: registerSchema,
+		onSubmit
+	});
 
     const handleButtons = e => {
         e.preventDefault();
@@ -70,45 +79,45 @@ function Register() {
     }
 
     if (!usernameIsEntered) {
-        content = <main className="registerForm">
+     	content = <main className="registerForm">
                     <h2>Välj ett användarnamn</h2>
                     <p>Namnet du väljer är samma namn som du kommer att logga in med.</p>
-                    <form>
                         <input
                             name="username"
+                            type="username"
+                            value={values.username}
+							onChange={handleChange}
+							onBlur={handleBlur}
                             key={1}
-                            value={username ? username : ""}
-                            onChange={e => setUserName(e.target.value)}
-                            placeholder="Användarnamn"
+							className={errors.username && touched.username ? "input-error" : ""}
                         />
+						{errors.username && touched.username && <p className="error">{errors.username}</p>}
                         <button onClick={handleButtons}>Nästa</button>
-                    </form>
                   </main>
     } else if (!passwordIsEntered) {
         content = <main className="registerForm">
                     <h2>Välj ditt lösenord</h2>
                     <p>Kom ihåg att spara lösenordet så att du inte glömmer bort det.</p>
-                    <form>
-                        <input
-                            name="password"
-                            type="password"
-                            value={password ? password : ""}
-                            key={2}
-                            onChange={e => setPassword(e.target.value)}
-                            placeholder="Lösenord"
-                        />
+
+						<input
+							name="password"
+							type="password"
+							value={values.password}
+							onChange={handleChange}
+							onBlur={handleBlur}
+							key={2}
+							className={errors.password && touched.password ? "input-error" : ""}
+						/>
+						{errors.password && touched.password && <p className="error">{errors.password}</p>}
                         <button onClick={handleButtons}>Nästa</button>
                         <a onClick={back}>Tillbaka</a>
-                    </form>
                   </main>
     } else {
         content = <main className="registerForm">
                     <h2>Nästan där!</h2>
                     <p>Nu återstår bara att skapa kontot. Du kan gå tillbaka ifall du ångrar dig och vill ändra något.</p>
-                    <form>
-                        <button onClick={handleSubmit} className="createAccountBtn">Skapa konto</button>
+                        <button disabled={isSubmitting} type="submit" className="createAccountBtn">Skapa konto</button>
                         <a onClick={back}>Tillbaka</a>
-                    </form>
                   </main>
     } if (registerError.error === false) {
         content = <main className="registerForm">
@@ -130,7 +139,11 @@ function Register() {
     }
 
     return (
-        <div>{content}</div>
+        <div>
+			<form onSubmit={handleSubmit}>
+				{content}
+			</form>
+		</div>
     )
 }
 

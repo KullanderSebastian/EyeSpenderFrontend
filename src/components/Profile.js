@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import profileIcon from "../svg/user-circle.svg";
 import ProfilePlaceholder from "../components/ProfilePlaceholder";
 import { TbEditCircle } from "react-icons/tb";
 import { IoIosArrowForward } from "react-icons/io";
 import LineBreak from "../components/LineBreak";
+import { useFormik } from "formik";
+import { financesSchema2 } from "../schemas";
 
 async function getUserId() {
     return fetch("http://localhost:3001/users/getuserid", {
@@ -18,7 +20,7 @@ async function getUserId() {
 }
 
 async function updateFinance(data) {
-    return fetch("http://localhost:3001/user/updateuserfinances", {
+    return fetch("http://localhost:3001/users/updateuserfinances", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -26,25 +28,6 @@ async function updateFinance(data) {
         body: JSON.stringify(data)
     })
     .then(data => data.json())
-}
-
-async function logoutUser() {
-    const token = "Bearer " + JSON.parse(sessionStorage.getItem("token"));
-    console.log(token);
-
-    return fetch("http://localhost:3001/users/logout", {
-        credentials: "include",
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token
-        },
-        body: JSON.stringify({"username": sessionStorage.getItem("username")})
-    })
-    .then(data => data.json())
-    .then(function(){
-        sessionStorage.clear();
-    })
 }
 
 async function changePassword(data) {
@@ -67,6 +50,65 @@ function Profile({ auth }) {
     const [newPassword, setNewPassword] = useState();
     const [newPasswordChecker, setNewPasswordChecker] = useState();
     const [profileLetter, setProfileLetter] = useState(sessionStorage.getItem("username").charAt(0).toUpperCase());
+	const [isLoggedOut, setIsLoggedOut] = useState(false);
+	const [errorState, setErrorState] = useState();
+	const navigate = useNavigate();
+
+	let content;
+
+	const onSubmit = async (values, actions) => {
+		financeData.map(async (obj) => {
+			const res = await updateFinance({
+				"username": sessionStorage.getItem("username"),
+				"title": obj.title,
+				"newAmount": values[obj.category]
+			});
+
+			console.log(res);
+		});
+
+        setContentState("profileMenu");
+    }
+
+	const {values, errors, touched, isSubmitting, handleBlur, handleChange, handleSubmit} = useFormik({
+		initialValues: {
+			rent: "",
+			homeinsurance: "",
+			food: "",
+			petrol: "",
+			carinsurance: "",
+			slcard: "",
+			mobilebill: "",
+			tobacco: "",
+			clothes: "",
+			training: "",
+			stocks: "",
+			savings: "",
+			pension: ""
+		},
+		validationSchema: financesSchema2,
+		onSubmit
+	});
+
+	async function logoutUser() {
+	    const token = "Bearer " + JSON.parse(sessionStorage.getItem("token"));
+
+	    return fetch("http://localhost:3001/users/logout", {
+	        credentials: "include",
+	        method: "PATCH",
+	        headers: {
+	            "Content-Type": "application/json",
+	            "Authorization": token
+	        },
+	        body: JSON.stringify({"username": sessionStorage.getItem("username")})
+	    })
+	    .then(data => data.json())
+	    .then(function(){
+	        sessionStorage.clear();
+			sessionStorage.username = "temp";
+			setIsLoggedOut(true);
+	    })
+	}
 
     useEffect(() => {
         const fetchFinanceData = async () => {
@@ -84,18 +126,24 @@ function Profile({ auth }) {
 
             const finalData = data.data;
 
+			data.data.map(obj => {
+				values[obj.category] = obj.amount;
+			});
+
             setFinanceData(finalData);
             setFinanceDataUnchanged(finalData);
         };
         fetchFinanceData();
         setDataIsLoadedBool(true);
-    }, [])
+
+		if (isLoggedOut) {
+			navigate("/splash", { replace:true });
+		}
+    }, [isLoggedOut, navigate])
 
     if (!auth) {
         return <Navigate to ="/splash" />;
     }
-
-    let content;
 
     const handleClick = e => {
         e.preventDefault();
@@ -104,30 +152,7 @@ function Profile({ auth }) {
             setContentState("myExpenses")
         } else if (e.target.innerText === "Byt lösenord") {
             setContentState("changePassword");
-        } else if (e.target.innerText === "Logga ut") {
-            console.log("CLICKED");
-            logoutUser();
         }
-    }
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-
-        let userId = await getUserId();
-
-        financeData.map(async (obj, index) => {
-            if (obj.amount != financeDataUnchanged[index].amount) {
-                const res = await updateFinance({
-                    "userId": userId.data,
-                    "title": obj.title,
-                    "newAmount": obj.amount
-                });
-
-                console.log(res);
-            }
-        });
-
-        setContentState("profileMenu");
     }
 
     const handleSubmitPassword = async e => {
@@ -144,20 +169,17 @@ function Profile({ auth }) {
             "newPasswordCheck": newPasswordChecker
         });
 
+		if (res.error) {
+			setErrorState(res.message);
+			return;
+		}
+
         console.log(res);
+		setCurrentPassword(null);
+		setNewPassword(null);
+		setNewPasswordChecker(null);
+		setErrorState(null);
         setContentState("profileMenu");
-    }
-
-    const handleChange = (e) => {
-        e.preventDefault();
-
-        let list = financeData;
-
-        list = list.map(
-            el => el.title === e.target.parentNode.firstChild.outerText ? { ...el, amount: e.target.value } : el
-        );
-
-        setFinanceData(list);
     }
 
     const handleChangePassword = (e) => {
@@ -210,20 +232,25 @@ function Profile({ auth }) {
         </div>
         <div className="profilePageMenu">
             <p>Hello expenses!</p>
-            <form>
                 {financeData.map((obj) => {
-                    return <div className="testInputs">
-                                <h3>{obj.title}</h3>
-                                <input
-                                    name={obj.category}
-                                    placeholder="0.00"
-                                    value={obj.amount?obj.amount : ""}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                })}
-                <button onClick={handleSubmit}>Spara ändringar</button>
-            </form>
+	                return 	<div>
+								<div className="testInputs">
+	                                <h3>{obj.title}</h3>
+	                                <input
+	                                    name={obj.category}
+										type={obj.category}
+	                                    value={values[obj.category] === 0 ? null : values[obj.category]}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										className={errors[obj.category] && touched[obj.category] ? "input-error" : ""}
+	                                />
+	                            </div>
+								<div>
+									{errors[obj.category] && touched[obj.category] && <p className="error">{errors[obj.category]}</p>}
+								</div>
+							</div>
+	            })}
+	            <button disabled={isSubmitting} type="submit">Spara ändringar</button>
         </div>
         </div>
     } else if (contentState === "changePassword") {
@@ -238,6 +265,7 @@ function Profile({ auth }) {
         </div>
         <div className="profilePageMenu">
             <form>
+				{errorState ? <p className="error">{errorState}</p> : null}
                 <input
                     name="currentPassword"
                     key={1}
@@ -272,7 +300,9 @@ function Profile({ auth }) {
 
     return (
         <div className="profilePage">
-            { content }
+			<form onSubmit={handleSubmit}>
+	            { content }
+			</form>
         </div>
     );
 }

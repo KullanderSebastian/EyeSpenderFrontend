@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useFormik } from "formik";
+import { loginSchema } from "../schemas";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -25,44 +27,63 @@ async function getUserSetupStatus(username) {
 }
 
 function SplashPage({ setToken }) {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
+	const [errorState, setErrorState] = useState();
     const navigate = useNavigate();
 
-    const handleSubmit = async e => {
-        e.preventDefault();
+    const onSubmit = async (values, actions) => {
         const token = await loginUser({
-            username,
-            password
+            "username": values.username,
+			"password": values.password
         });
 
-        sessionStorage.setItem("username", username);
-        setToken(token.token);
+		if (token.error) {
+			setErrorState(token.message);
+		} else {
+			sessionStorage.setItem("username", values.username);
+	        setToken(token.token);
 
-        let status = await getUserSetupStatus(username);
+			let status = await getUserSetupStatus(values.username);
 
-        if (status.data === false) {
-            navigate("/finances");
-        } else {
-            navigate("/dashboard");
-        }
+			if (status.data === false) {
+				navigate("/finances");
+			} else {
+				navigate("/dashboard");
+			}
+		}
     }
+
+	const {values, errors, touched, isSubmitting, handleBlur, handleChange, handleSubmit} = useFormik({
+		initialValues: {
+			username: "",
+			password: ""
+		},
+		validationSchema: loginSchema,
+		onSubmit
+	});
 
     return (
         <main className="loginForm">
+			{errorState ? <p className="error">{errorState}</p> : null}
             <form onSubmit={handleSubmit}>
                 <input
-                    name="username"
-                    onChange={e => setUserName(e.target.value)}
-                    placeholder="Användarnamn"
+					name="username"
+					type="username"
+					value={values.username}
+					onChange={handleChange}
+					onBlur={handleBlur}
+					className={errors.username && touched.username ? "input-error" : ""}
                 />
+				{errors.username && touched.username && <p className="error">{errors.username}</p>}
                 <input
                     name="password"
                     type="password"
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="Lösenord"
+					value={values.password}
+                    onChange={handleChange}
+					onBlur={handleBlur}
+                    className={errors.password && touched.password ? "input-error" : ""}
                 />
-            <button className="loginBtn">Logga in</button>
+				{errors.password && touched.password && <p className="error">{errors.password}</p>}
+            <button disabled={isSubmitting} type="submit" className="loginBtn">Logga in</button>
             </form>
             <hr></hr>
             <p>Har du inget konto?</p>

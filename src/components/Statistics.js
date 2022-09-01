@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 async function getUserId() {
     return fetch("http://localhost:3001/users/getuserid", {
@@ -11,7 +12,7 @@ async function getUserId() {
     .then(data => data.json())
 }
 
-function Statistics() {
+function Statistics({ auth }) {
 	const [plannedFinances, setPlannedFinances] = useState();
 	const [unplannedFinances, setUnplannedFinances] = useState();
 	const [salary, setSalary] = useState();
@@ -65,6 +66,10 @@ function Statistics() {
 
 		fetchFinances();
 	}, [])
+
+	if (!auth) {
+        return <Navigate to ="/splash" />;
+    }
 
 	let totalSpending = 0;
 

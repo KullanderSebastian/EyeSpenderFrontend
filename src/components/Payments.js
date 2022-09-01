@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import LineBreak from "../components/LineBreak";
+import { paymentSchema } from "../schemas";
+import { useFormik } from "formik";
+
 
 async function getUserId() {
     return fetch("http://localhost:3001/users/getuserid", {
@@ -25,9 +28,7 @@ async function addPayment(data) {
 
 function Payments() {
 	const [payments, setPayments] = useState([]);
-	const [pTitle, setTitle] = useState();
 	const [pCategory, setCategory] = useState("food");
-	const [pAmount, setAmount] = useState();
 	const [dataIsLoaded, setDataIsLoaded] = useState(false);
 
 	useEffect(() => {
@@ -52,6 +53,53 @@ function Payments() {
 		setDataIsLoaded(true);
 	}, [])
 
+	const onSubmit = async (values, actions) => {
+		console.log(values, pCategory);
+
+		let date = new Date();
+		let month = date.getMonth();
+		let userId = await getUserId();
+
+		const res = await addPayment({
+			userId: userId.data,
+			month: month,
+			title: values.paymentTitle,
+			category: pCategory,
+			amount: values.paymentAmount,
+			date: date,
+		});
+
+		let array;
+
+		if (!payments) {
+			array = [];
+		} else {
+			array = payments;
+		}
+
+		array.push({
+			title: values.paymentTitle,
+			category: pCategory,
+			amount: values.paymentAmount,
+			date: date.toISOString()
+		})
+
+		setPayments(array);
+
+		setCategory("food");
+		closeForm();
+		console.log(res);
+	}
+
+	const {values, errors, touched, isSubmitting, handleBlur, handleChange, handleSubmit} = useFormik({
+		initialValues: {
+			paymentTitle: "",
+			paymentAmount: ""
+		},
+		validationSchema: paymentSchema,
+		onSubmit
+	});
+
 	const openForm = () => {
 		console.log("open form");
 		document.getElementById("paymentForm").style.display = "block";
@@ -62,7 +110,7 @@ function Payments() {
 		document.getElementById("paymentForm").style.display = "none";
 	}
 
-	const handleChange = (e) => {
+	/*const handleChangeSelect = (e) => {
 		e.preventDefault();
 
 		if (e.target.name === "inputTitle") {
@@ -74,47 +122,7 @@ function Payments() {
 		}
 
 		console.log(e.target.name);
-	}
-
-	const handleSubmit = async e => {
-        e.preventDefault();
-
-		let date = new Date();
-		let month = date.getMonth();
-		let userId = await getUserId();
-
-		const res = await addPayment({
-            userId: userId.data,
-			month: month,
-			title: pTitle,
-			category: pCategory,
-			amount: pAmount,
-			date: date,
-        });
-
-		let array;
-
-		if (!payments) {
-			array = [];
-		} else {
-			array = payments;
-		}
-
-		array.push({
-			title: pTitle,
-			category: pCategory,
-			amount: pAmount,
-			date: date.toISOString()
-		})
-
-		setPayments(array);
-
-		setTitle("");
-		setAmount("");
-		setCategory("food");
-		closeForm();
-		console.log(res);
-    }
+	}*/
 
 	return (
 		<div className="background">
@@ -141,20 +149,28 @@ function Payments() {
 	                </div>
 
 					<div className="formPopup" id="paymentForm">
-						<form className="formContainer">
+						<form onSubmit={handleSubmit} className="formContainer">
 							<input
-								name="inputTitle"
-								value={pTitle}
-								onChange={e => handleChange(e)}
+								name="paymentTitle"
+								type="paymentTitle"
+								value={values.paymentTitle}
+								onChange={handleChange}
+								onBlur={handleBlur}
+								className={errors.paymentTitle && touched.paymentTitle ? "input-error" : ""}
 							/>
+							{errors.paymentTitle && touched.paymentTitle && <p className="error">{errors.paymentTitle}</p>}
 
 							<input
-								name="inputAmount"
-								value={pAmount}
-								onChange={e => handleChange(e)}
+								name="paymentAmount"
+								type="paymentAmount"
+								value={values.paymentAmount}
+								onChange={handleChange}
+								onBlur={handleBlur}
+								className={errors.paymentAmount && touched.paymentAmount ? "input-error" : ""}
 							/>
+							{errors.paymentAmount && touched.paymentAmount && <p className="error">{errors.paymentAmount}</p>}
 
-							<select name="select" value={pCategory} onChange={handleChange}>
+							<select name="select" value={pCategory} onChange={(e) => {setCategory(e.target.value)}}>
 								<option value="food">Mat</option>
 								<option value="entertainment">Nöje</option>
 								<option value="transportation">Färdmedel</option>
@@ -162,7 +178,7 @@ function Payments() {
 								<option value="other">Övrigt</option>
 							</select>
 
-							<button onClick={handleSubmit}>Lägg till</button>
+							<button type="submit">Lägg till</button>
 						</form>
 					</div>
 	            </div>

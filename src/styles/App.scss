@@ -184,6 +184,12 @@ h1, h2, h3, h4, h5, h6 {
         width: 100%;
     }
 
+	a {
+		text-decoration: underline;
+		font-size: 12px;
+		text-align: center;
+	}
+
     .expensesInputsWrapper {
         display: table;
     }
@@ -584,6 +590,32 @@ h1, h2, h3, h4, h5, h6 {
 	}
 }
 
+@keyframes shake {
+  10%, 90% {transform: translate3d(-1px, 0, 0);}
+  20%, 80% {transform: translate3d(2px, 0, 0);}
+  30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
+  40%, 60% {transform: translate3d(4px, 0, 0);}
+}
+
 .active {
     color: black!important;
+}
+
+input.input-error {
+	border: 2px solid!important;
+	border-color: red!important;
+	animation: shake 0.5s!important;
+}
+
+button.error {
+	background-color: rgba(74, 123, 157, 0.5);
+	animation: shake 0.5s!important;
+}
+
+p.error {
+	color: red;
+}
+
+button:disabled {
+	opacity: 0.35;
 }
