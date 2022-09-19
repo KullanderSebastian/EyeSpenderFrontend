@@ -15,9 +15,11 @@ async function getUserId() {
 function Statistics({ auth }) {
 	const [plannedFinances, setPlannedFinances] = useState();
 	const [unplannedFinances, setUnplannedFinances] = useState();
+	const [financeData, setFinanceData] = useState();
 	const [salary, setSalary] = useState();
 	const [dataIsLoaded, setDataIsLoaded] = useState(false);
-	const monthNames = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "Oktober", "November", "December"]
+	const monthNames = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
+	const categories = ["food", "entertainment", "transportation", "savings", "other"];
 
 	useEffect(() => {
 		const fetchFinances = async () => {
@@ -48,6 +50,49 @@ function Statistics({ auth }) {
 			const data2 = await responsePlanned.json();
 
 			setPlannedFinances(data2.data);
+
+			let concatinatedArray;
+
+			if (!data.data) {
+				concatinatedArray = data2.data;
+			} else {
+				concatinatedArray = data2.data.concat(data.data);
+			}
+
+			let cleanedArray = [];
+			let tempValues = {"food": 0, "entertainment": 0, "transportation": 0, "savings": 0, "other": 0}
+			let categoryNames = {"food": "Mat", "entertainment": "Nöje", "transportation": "Transport", "savings": "Sparande", "other": "Övrigt"}
+
+			concatinatedArray.map(financeData => {
+				console.log(financeData);
+				if (categories.includes(financeData.category)) {
+					if (financeData.amount === 0) {
+						return;
+					} else {
+						tempValues[financeData.category] = tempValues[financeData.category] + financeData.amount;
+					}
+				} else {
+					if (financeData.amount === 0) {
+						return;
+					} else {
+						cleanedArray.push({
+							category: financeData.title,
+							amount: financeData.amount
+						})
+					}
+				}
+			})
+
+			for (var key in tempValues) {
+				if (tempValues[key] != 0) {
+					cleanedArray.push({
+						category: categoryNames[key],
+						amount: tempValues[key]
+					})
+				}
+			}
+
+			setFinanceData(cleanedArray);
 
 			const fetchSalary = await fetch("http://localhost:3001/users/getsalary", {
 				method: "PATCH",
@@ -97,24 +142,42 @@ function Statistics({ auth }) {
 	let lastDayOfMonth = new Date(dateToday.getFullYear(), dateToday.getMonth()+1, 0).getDate();
 	let daysUntilEndOfMonth = lastDayOfMonth - dateToday.getDate();
 
+	let barLeftWidth = (totalSpending / salary) * 100;
+	let barRightWidth = 100 - barLeftWidth;
+
 	return (
-		<div className="background">
-			<div className="payments">
-	            <div className="fullscreen">
-                    <div className="pageTitle">
-						<h3>Statistik</h3>
-                    </div>
-	                <div className="paymentsDiv">
-						<h3>Sammanfattning</h3>
-						<h3>{monthNames[dateToday.getMonth()]}</h3>
-						<p>Inkomst: {salary} kr</p>
-	                    <p>Utgift: {totalSpending} kr</p>
-						<p>Totalt: {salary - totalSpending} kr</p>
-						<p>Det är {daysUntilEndOfMonth} dagar kvar denna månad,
-						du kan spendera {(salary - totalSpending) / daysUntilEndOfMonth}kr per dag.</p>
-	                </div>
-	            </div>
-	        </div>
+		<div className="statistics">
+			<div className="fullPageWrapper">
+				<div className="headerWrapper">
+					<div className="headerTextWrapper">
+						<p><div className="number">{salary - totalSpending} SEK</div><div className="kvar"><div className="kvarBorder">kvar</div></div></p>
+					</div>
+					<div className="barWrapper">
+						<div className="barLeft" style={{width: `${barLeftWidth}%`}}></div>
+						<div className="barRight" style={{width: `${barRightWidth}%`}}></div>
+					</div>
+					<div className="spendingOverview">
+						<p><b>{totalSpending}</b> av {salary} spenderat</p>
+					</div>
+				</div>
+				<div className="contentWrapper">
+						<div className="insightsWrapper">
+							<div className="insightsCard"><h1>{daysUntilEndOfMonth} Dagar</h1><p>Kvar denna månad</p></div>
+							<div className="insightsCard"><h1>{Math.round((salary - totalSpending) / daysUntilEndOfMonth)} SEK</h1><p>Kan du spendera per dag</p></div>
+						</div>
+
+						<h2>Utgifter {monthNames[dateToday.getMonth()]}</h2>
+						<div className="budgetWrapper">
+							{dataIsLoaded ? financeData.map((financeData) => {
+								if (financeData.amount === 0) {
+									return;
+								} else {
+									return <div className="budgetItem"><div className="paymentText">{financeData.category}:</div><div className="paymentAmount">{financeData.amount} SEK</div></div>
+								}
+							}) : null}
+						</div>
+					</div>
+				</div>
 		</div>
 	);
 }

@@ -11,6 +11,7 @@ import Register from "./components/Register";
 import Statistics from "./components/Statistics";
 import Payments from "./components/Payments";
 import useToken from "./components/useToken";
+import '@marcius-capital/fonts';
 
 function App() {
     const { token, setToken } = useToken();

@@ -4,7 +4,7 @@
 
 //fonts
 $lato: "Lato", sans-serif;
-$roboto: "Roboto", sans-serif;
+$helvetica: "HelvicaNeueCyr", sans-serif;
 
 //colors
 $steelBlue: #4a7b9d;
@@ -22,9 +22,10 @@ $goldenroadYellow: #faffd8;
     margin: 0;
 }
 
-body {
-    font-family: $roboto;
-    font-weight: normal;
+body, html {
+    font-family: $helvetica;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -381,139 +382,238 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.profilePage {
-    height: 100%;
-    width: 100%;
-    background-color: $oceanBlue;
+.profile {
+	.fullPageWrapper {
+		background: linear-gradient(180deg, $oceanBlue 50%, white 50%);
+		height: 100vh;
+		width: 100vw;
+	}
 
-    .testInputs:first-of-type {
-        margin-top: 2em;
-    }
+	.headerWrapper {
+		width: 90%;
+		margin: 0 auto;
+		display: table;
+		margin-bottom: 2vh;
 
-    .testInputs {
-        background-color: #F5F5F5;
+		h1 {
+			font-size: 24px;
+			padding-left: 18px;
+			padding-top: 2vh;
+			color: white;
+			padding-bottom: 1vh;
+		}
+
+		.editIcon {
+			font-size: 30px;
+			color: white;
+			float: right;
+			padding-top: 35px;
+		}
+
+		.profilePicture {
+			float: left;
+		}
+	}
+
+	.contentWrapper {
+		background-color: white;
+		border-top-right-radius: 10px;
+		border-top-left-radius: 10px;
+		padding-bottom: calc(52px + 2vh);
+	}
+
+	.menuItem {
+		padding: 2em;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.testInputs {
+		background-color: #F5F5F5;
         margin-top: 1em;
         padding-top: 10px;
         padding-bottom: 10px;
-        padding-right: 0.5em;
-        border-radius: 5px;
         overflow: hidden;
         line-height: 36.5px;
 
-        input {
+		input {
             width: 25%;
-            margin-top: 0;
+			margin-right: 5%;
             background-color: white;
-            margin-left: 0.5em;
             border: 1px solid black;
             float: right;
         }
 
-        h3 {
-            margin-left: 0.5em;
+		h3 {
+            margin-left: 5%;
             font-size: 14px;
             display: inline-block;
         }
-    }
+	}
 
-    .background {
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        overflow: auto;
-        padding-bottom: 2em;
+	.passwordInputs {
+		input {
+			width: 90%;
+			margin-right: 5%;
+			margin-left: 5%;
+			margin-top: 2vh;
+		}
+	}
 
-        svg {
-            font-size: 30px;
-            padding-right: 1em;
-            display:inline-block;
-            float: right;
-            padding-top: calc(2.5em + 15px);
-            color: white;
-        }
-    }
+	.goBack {
+		svg {
+			font-size: 36px;
+			margin-bottom: -20px;
+			padding: 15px;
+		}
 
-    .profile {
-        margin-top: 1em;
-        margin-left: 3.5em;
-        width: 75px;
-        display:inline-block;
-        color: white;
-    }
+		p {
+			display: inline-block;
+			position: relative;
+    		top: -7px;
+		}
+	}
 
-    .profilePicture {
-        svg {
-            margin-top: 0.5em;
-            padding: 0;
-        }
-    }
-
-    .profilePageMenu {
-        background-color: white;
-        border-top-right-radius: 35px;
-        border-top-left-radius: 35px;
-        padding-bottom: 10vh;
-    }
-
-    .menuItem {
-        padding: 2em;
-        display: flex;
-        justify-content: space-between;
-
-
-        p {
-        }
-
-        svg {
-            margin-top: 2px;
-        }
-    }
-
-    button {
-        display: table;
-        margin: 0 auto;
-        margin-top: 1em;
-        width: 50%;
-        color: black;
-    }
+	button {
+		display: table;
+		margin: 0 auto;
+		margin-top: 2vh;
+		color: black;
+	}
 }
 
 .statistics {
-	height: 100%;
-    width: 100%;
-
-	.fullscreen {
-		position: fixed;
-		background-color: $oceanBlue;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		overflow: auto;
+	.fullPageWrapper {
+		background: linear-gradient(180deg, $oceanBlue 50%, #F1F5F9 50%);
+		height: 100vh;
+		width: 100vw;
 	}
 
-	.statisticsDiv {
-        width: 100%;
-        padding-bottom: 9vh;
-        margin: 0 auto;
-        background-color: white;
-        border-top-right-radius: 35px;
-        border-top-left-radius: 35px;
+	.headerWrapper {
+		padding-top: 2em;
+		padding-bottom: 2em;
+		width: 90%;
+		margin: 0 auto;
+	}
 
-        h3 {
-            padding-top: 1em;
-            padding-left: 3em;
-            font-weight: 600;
-        }
-    }
+	.barWrapper {
+		width: 100%;
+		height: 2.5vh;
+		display: flex;
+		background-color: #385B94;
+		border-bottom-right-radius: 30px;
+		border-top-right-radius: 30px;
+		border-bottom-left-radius: 30px;
+		border-top-left-radius: 30px;
+	}
 
-	.pageTitle {
-        text-align: center;
-        margin-top: 2em;
-		margin-bottom: 2em;
+	.barLeft {
+		background-color: #89A5D2;
+		height: 2.5vh;
+		border-bottom-right-radius: 30px;
+		border-top-right-radius: 30px;
+		border-bottom-left-radius: 30px;
+		border-top-left-radius: 30px;
+	}
+
+	.barRight {
+		background-color: #385B94;
+		height: 2.5vh;
+		border-bottom-right-radius: 30px;
+		border-top-right-radius: 30px;
+	}
+
+	.contentWrapper {
+		padding-top: 4vh;
+		background-color: #F1F5F9;
+		border-radius: 10px;
+		padding-bottom: calc(52px + 3vh);
+
+		h2 {
+			font-size: 20px;
+			margin-left: 5%;
+			margin-top: 3vh;
+			margin-bottom: 1vh;
+		}
+	}
+
+	.headerTextWrapper {
+		display: flex;
+		padding-bottom: 10px;
+	}
+
+	.number {
+		float: left;
 		color: white;
-    }
+		font-size: 36px;
+		font-weight: 600;
+	}
+
+	.kvar {
+		color: white;
+		font-size: 16px;
+		padding-left: 5px;
+		margin-top: 10px;
+		float: left;
+	}
+
+	.kvarBorder {
+		padding-left: 10px;
+		padding-right: 10px;
+		border: 1px solid white;
+		border-radius: 25px;
+	}
+
+	.spendingOverview {
+		padding-top: 5px;
+		color: white;
+		font-size: 14px;
+	}
+
+	.insightsWrapper {
+		display: flex;
+		justify-content: space-around;
+		width: 100%;
+	}
+
+	.insightsCard {
+		width: 40vw;
+		height: 20vh;
+		background-color: white;
+		text-align: center;
+		border-radius: 10px;
+		box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+		h1 {
+			font-size: 20px;
+			margin: 0;
+			padding-top: 3vh;
+			padding-bottom: 5vh;
+		}
+
+		p {
+			padding: 0;
+			font-size: 14px;
+		}
+	}
+
+	.budgetWrapper {
+		background-color: white;
+		border-radius: 10px;
+		box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+		width: 90%;
+		margin: 0 auto;
+		padding-top: 1vh;
+		padding-bottom: 1vh;
+	}
+
+	.budgetItem {
+		display: flex;
+		justify-content: space-between;
+		margin-left: 1em;
+		margin-right: 1em;
+		padding-bottom: 0.5vh;
+	}
 }
 
 .payments {
