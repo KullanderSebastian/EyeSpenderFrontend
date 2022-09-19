@@ -4,6 +4,7 @@ import profileIcon from "../svg/user-circle.svg";
 import ProfilePlaceholder from "../components/ProfilePlaceholder";
 import { TbEditCircle } from "react-icons/tb";
 import { IoIosArrowForward } from "react-icons/io";
+import { BsArrowLeftCircle } from "react-icons/bs";
 import LineBreak from "../components/LineBreak";
 import { useFormik } from "formik";
 import { financesSchema2 } from "../schemas";
@@ -194,6 +195,10 @@ function Profile({ auth }) {
         }
     }
 
+	const goBack = () => {
+		setContentState("profileMenu");
+	}
+
     if (contentState === "profileMenu") {
         content = <div>
             <div className="background">
@@ -223,14 +228,16 @@ function Profile({ auth }) {
     } else if (contentState === "myExpenses") {
         content = <div>
             <div className="background">
-            <div className="profile">
+			<div className="profile">
                 <h3>Profil</h3>
-                <img className="icon" src={profileIcon} />
-                <p>{sessionStorage.getItem("username")}</p>
+                <div className="profilePicture">
+                    <ProfilePlaceholder letter={profileLetter}/>
+                </div>
             </div>
             <TbEditCircle />
         </div>
         <div className="profilePageMenu">
+			<BsArrowLeftCircle onClick={goBack} />
             <p>Hello expenses!</p>
                 {financeData.map((obj) => {
 	                return 	<div>
@@ -256,14 +263,16 @@ function Profile({ auth }) {
     } else if (contentState === "changePassword") {
         content = <div>
             <div className="background">
-            <div className="profile">
+			<div className="profile">
                 <h3>Profil</h3>
-                <img className="icon" src={profileIcon} />
-                <p>{sessionStorage.getItem("username")}</p>
+                <div className="profilePicture">
+                    <ProfilePlaceholder letter={profileLetter}/>
+                </div>
             </div>
             <TbEditCircle />
         </div>
         <div className="profilePageMenu">
+			<BsArrowLeftCircle onClick={goBack} />
             <form>
 				{errorState ? <p className="error">{errorState}</p> : null}
                 <input
